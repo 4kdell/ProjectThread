@@ -1,0 +1,122 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var otherUsers = ViewData["OtherUsers"] as List<ProjectThread.Models.User>;
+    var friends = ViewData["Friends"] as List<ProjectThread.Models.Friend>;
+}
+
+<div class="container mt-5">
+    <div class="row text-center">
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">👤 My Profile</h5>
+                    <p class="card-text">View and edit your profile info.</p>
+                    <a href="/Users/Profile" class="btn btn-primary btn-sm">Go</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">👥 Friends</h5>
+                    <p class="card-text">Manage your friend list.</p>
+                    <a href="/Users/Friends" class="btn btn-primary btn-sm">Go</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">📝 Notes</h5>
+                    <p class="card-text">View and manage your notes.</p>
+                    <a href="/Users/Notes" class="btn btn-primary btn-sm">Go</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🔔 Notifications</h5>
+                    <p class="card-text">Check latest updates.</p>
+                    <a href="/Users/Notifications" class="btn btn-primary btn-sm">Go</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-xl-3 ">
+            <h2 class="text-dark">Your Friend List</h2>
+            @if (friends != null && friends.Any())
+            {
+                <table class="table table-bordered table-striped">
+                    <thead class="table-primary">
+                        <tr>
+
+                            <th>Friend Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var friend in friends)
+                        {
+                            <tr>
+
+                                <td class="FriendName" data-id="@friend.FriendUserID">@friend.FriendName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>You don't have any friends yet. Add friends below to start chatting!</p>
+            }
+        </div>
+        <div class="col-xl-6 ">
+
+           <h1> some data</h1>
+
+        </div>
+
+
+
+        @* <hr class="border border-dark border-2 my-4" /> *@
+
+        <div class="col-xl-3">
+            <h2 class="text-dark">Recommendations for You</h2>
+            <h5 class="text-dark">Send requests and add more friends</h5>
+            @if (otherUsers != null && otherUsers.Any())
+            {
+                <table class="table table-bordered table-striped">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Name</th>
+                            <th>Send Req</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in otherUsers)
+                        {
+                            <tr>
+                                <td>@user.Name</td>
+                                <td>
+                                    <a class="btn btn-sm btn-outline-primary" asp-controller="Users" asp-action="AddToFriend" asp-route-id="@user.UserID">+ Add</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No friends available for recommendations.</p>
+            }
+        </div>
+    </div>
+</div>

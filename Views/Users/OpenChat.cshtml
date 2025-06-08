@@ -1,0 +1,109 @@
+﻿@model List<ProjectThread.Models.Thread>
+@{
+    var _friendID = (int)ViewData["FriendUserID"];
+}
+
+<div id="chat-card" class="card shadow-sm rounded-3 d-flex flex-column" style="height: 90vh;">
+    <!-- Header -->
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0" id="friendName">@ViewData["ReceiverName"]</h5>
+        <div class="dropdown">
+            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                More
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item text-danger" href="#" onclick="confirmDelete('@Url.Action("DeleteFriend", "Users", new { id = _friendID })')">Delete Friend</a>
+                </li>
+                <li>
+                    <a class="dropdown-item text-warning" href="#" onclick="blockFriend()">Block</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div id="threadsContainer" class="card-body bg-light overflow-auto flex-grow-1">
+        @if (Model != null && Model.Any())
+        {
+            var senderId = (int)ViewData["senderID"];
+            foreach (var thread in Model)
+            {
+                <div class="d-flex mb-3 @(thread.SenderID == senderId ? "justify-content-end" : "justify-content-start")">
+                    <div class="p-3 rounded shadow-sm" style="max-width: 70%; background-color: @(thread.SenderID == senderId ? "#e1f5fe" : "#fff3cd");">
+                        <div class="@(thread.SenderID == senderId ? "text-end" : "text-start")">
+                            @thread.ThreadBody
+                        </div>
+                        <div class="text-muted small mt-1 @(thread.SenderID == senderId ? "text-end" : "text-start")">
+                            @thread.CreatedOn.ToString("g")
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center text-muted mt-5">No messages yet. Start the conversation!</div>
+        }
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer bg-white border-top">
+        <form id="messageForm" asp-action="AddThread" asp-controller="Users" class="d-flex align-items-center gap-2">
+            <input type="hidden" value="1" name="Direction" />
+            <input type="text" class="form-control rounded-pill" name="Body" placeholder="Type your message..." autocomplete="off" />
+            <button type="submit" class="btn btn-primary rounded-pill px-4">Send</button>
+        </form>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmDelete(deleteUrl) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete this friend?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: deleteUrl,
+                    type: 'POST',
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: response.message,
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                // Optionally reload the page or update UI
+                                window.location.href = '/Users/Friends';
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: response.message
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Something went wrong while deleting.'
+                        });
+                    }
+                });
+            }
+        });
+    }
+</script>

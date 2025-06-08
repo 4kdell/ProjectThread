@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ProjectThread</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ProjectThread.styles.css" asp-append-version="true" />
+
+    <style>
+
+
+        /* Make all text uppercase */
+        body {
+            text-transform: uppercase;
+        }
+        /* Navbar link hover effects */
+        .navbar-nav .nav-link {
+            transition: all 0.3s ease;
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: #0d6efd !important;
+                transform: scale(1.05);
+            }
+
+        /* Soft shadow for main content area */
+        main {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Footer styling */
+        footer.footer {
+            background-color: #fdfdfd;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            font-size: 0.875rem;
+            border-top: 1px solid #dee2e6;
+        }
+
+            footer.footer a {
+                text-decoration: none;
+                color: #0d6efd;
+            }
+
+                footer.footer a:hover {
+                    text-decoration: underline;
+                }
+
+        .navbar-brand:hover {
+            color: #198754 !important;
+        }
+    </style>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+    <!-- Header/Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold text-success" asp-area="" asp-controller="Users" asp-action="Friends">Project Thread</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Friends">Friends</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="NoteEditor">Notes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <div class="d-inline">
+                                <div class="dropdown">
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        MY PROFILE
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="nav-link text-info" asp-area="" asp-controller="Users" asp-action="Profile">Go to Profile</a></li>
+                                        <li><a class="nav-link text-danger" asp-area="" asp-controller="Auth" asp-action="Logout">LogOut</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main content container -->
+    <div class="container mb-5">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto text-center text-muted">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mb-1 mb-md-0">
+                    &copy; 2025 <strong>ProjectThread - 4kdell</strong>
+                </div>
+                <div class="col-md-4 mb-1 mb-md-0 dropdown">
+                    <a class="text-primary dropdown-toggle " href="#" role="button" id="contactDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Contact Us
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="contactDropdown">
+                        <li><a class="dropdown-item btn btn-sm text-secondary mb-1" href="#">GitHub</a></li>
+                        <li><a class="dropdown-item btn btn-sm text-secondary" href="mailto:4kdell@gmail.com">Email Us</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+

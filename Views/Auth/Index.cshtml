@@ -1,0 +1,239 @@
+﻿@{
+    ViewData["Title"] = "Project Thread";
+    Layout = "Auth_Layout";
+}
+
+<div class="container py-5">
+
+    <!-- Welcome Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-3 fw-bold">
+            Welcome to Project Thread
+        </h1>
+        <p class="lead text-secondary">
+            Connect and chat with users in real-time using their usernames. Fast. Secure. Effortless.
+        </p>
+        <hr class="w-25 mx-auto">
+    </div>
+
+    <!-- Action Cards -->
+    <div class="row g-4 mb-5 justify-content-center">
+
+        <!-- Register Card -->
+        <div class="col-md-4">
+            <div class="card h-100 border-success shadow-sm">
+                <div class="card-body text-center d-flex flex-column">
+                    <h5 class="card-title">
+                        <i class="bi bi-person-plus-fill me-2"></i> New User?
+                    </h5>
+                    <p class="card-text text-muted">Create an account and join the conversation instantly.</p>
+                    <a href="/Auth/SignUp" class="btn btn-success mt-auto">Register</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Card -->
+        <div class="col-md-4">
+            <div class="card h-100 border-primary shadow-sm">
+                <div class="card-body text-center d-flex flex-column">
+                    <h5 class="card-title">
+                        <i class="bi bi-key-fill me-2"></i> Already Registered?
+                    </h5>
+                    <p class="card-text text-muted">Log in to start chatting with other users.</p>
+                    <a href="/Auth/Login" class="btn btn-primary mt-auto">Login</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Chat Card -->
+        <div class="col-md-4">
+            <div class="card h-100 border-info shadow-sm">
+                <div class="card-body text-center d-flex flex-column">
+                    <h5 class="card-title">
+                        <i class="bi bi-chat-dots-fill me-2"></i> Start Chatting
+                    </h5>
+                    <p class="card-text text-muted">Jump into the chat dashboard and find your friends.</p>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a href="/Users/Friends" class="btn btn-info mt-auto text-white">Go to Chat</a>
+                    }
+                    else
+                    {
+                        <a href="/Auth/Login" class="btn btn-info mt-auto text-white">Open Chat</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Documentation Section -->
+    <div class="mb-5">
+        <h3 class="text-primary">
+            <i class="bi bi-book-half me-2"></i> What is Project Thread?
+        </h3>
+        <p class="text-muted">
+            <strong>Project Thread</strong> is a real-time chat web application built using <strong>ASP.NET Core MVC</strong>.
+            It allows registered users to find and connect with others using their unique usernames. This app demonstrates how modern communication can be simple and fast—whether for friends, classmates, or colleagues.
+        </p>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><i class="bi bi-lock-fill me-2"></i> Secure login and registration with cookie authentication</li>
+            <li class="list-group-item"><i class="bi bi-chat-left-text-fill me-2"></i> Real-time chat interface with friends</li>
+            <li class="list-group-item"><i class="bi bi-person-circle me-2"></i> Friendly UI with Bootstrap 5 for responsiveness</li>
+            <li class="list-group-item"><i class="bi bi-phone-fill me-2"></i> Fully mobile-friendly layout</li>
+        </ul>
+    </div>
+
+    <div class="container mt-5">
+        <h3 class="text-center mb-4 text-primary">
+            <i class="bi bi-stars me-2"></i> Key Features
+        </h3>
+        <div class="row text-center g-4">
+
+            <!-- Feature 1: Real-time Messaging -->
+            <div class="col-md-4">
+                <div class="border rounded p-4 h-100 shadow-sm">
+                    <h5>
+                        <i class="bi bi-lightning-fill me-2"></i> Real-time Messaging
+                    </h5>
+                    <p class="text-muted">
+                        Communicate instantly without refreshing the page. Messages are delivered and displayed in real-time between users, enhancing interactivity and engagement.
+                    </p>
+                    <ul class="list-unstyled text-muted small">
+                        <li><i class="bi bi-check2-circle me-1"></i> Message updates appear instantly</li>
+                        <li><i class="bi bi-check2-circle me-1"></i> Smooth conversation flow</li>
+                        <li><i class="bi bi-check2-circle me-1"></i> Minimal latency experience</li>
+                        <li><i class="bi bi-check2-circle me-1"></i> Perfect for group or 1:1 chatting</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 2: Secure Sessions -->
+            <div class="col-md-4">
+                <div class="border rounded p-4 h-100 shadow-sm">
+                    <h5>
+                        <i class="bi bi-shield-lock-fill me-2"></i> Secure Sessions
+                    </h5>
+                    <p class="text-muted">
+                        Your account and session are protected using secure ASP.NET Core Identity and cookie-based authentication, ensuring your credentials are always safe.
+                    </p>
+                    <ul class="list-unstyled text-muted small">
+                        <li><i class="bi bi-check2-circle me-1"></i> Cookie-based login system</li>
+                        <li><i class="bi bi-check2-circle me-1"></i> User data never exposed</li>
+                        <li><i class="bi bi-check2-circle me-1"></i> Session timeout and validation</li>
+                        <li><i class="bi bi-check2-circle me-1"></i> Logout and session clearing supported</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 3: Responsive UI -->
+            <div class="col-md-4">
+                <div class="border rounded p-4 h-100 shadow-sm">
+                    <h5>
+                        <i class="bi bi-phone-fill me-2"></i> Responsive UI
+                    </h5>
+                    <p class="text-muted">
+                        The entire application is built with Bootstrap 5, making it fully responsive and optimized for desktops, tablets, and mobile phones of all sizes.
+                    </p>
+                    <ul class="list-unstyled text-muted small">
+                        <li><i class="bi bi-check2-circle me-1"></i> Adaptive layout with grid system</li>
+                        <li><i class="bi bi-check2-circle me-1"></i> Works great on small screens</li>
+                        <li><i class="bi bi-check2-circle me-1"></i> Clean and modern UI elements</li>
+                        <li><i class="bi bi-check2-circle me-1"></i> Touch-friendly interactions</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <h3 class="text-center mb-4 text-success">
+            <i class="bi bi-rocket-fill me-2"></i> How It Works
+        </h3>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <h5><i class="bi bi-1-circle me-2"></i> Sign Up / Log In</h5>
+                    <p class="text-muted">Create an account with a unique username or log in if you already have one.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <h5><i class="bi bi-2-circle me-2"></i> Find Friends</h5>
+                    <p class="text-muted">Search for users by their username and send them a friend request.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <h5><i class="bi bi-3-circle me-2"></i> Start Chatting</h5>
+                    <p class="text-muted">Access your chat dashboard and send real-time messages.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <h5><i class="bi bi-4-circle me-2"></i> Stay Notified</h5>
+                    <p class="text-muted">Get instant feedback when new messages arrive (future scope).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <h3 class="text-center mb-4 text-info">
+            <i class="bi bi-camera-fill me-2"></i> Preview the Experience
+        </h3>
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <img src="/uploads/images/loginimage.png" class="img-fluid rounded shadow-sm" alt="Login Interface">
+                <p class="mt-2 text-muted">Login Interface</p>
+            </div>
+            <div class="col-md-4">
+                <img src="/uploads/images/registerimage.png" class="img-fluid rounded shadow-sm" alt="Register Interface">
+                <p class="mt-2 text-muted">Register Interface</p>
+            </div>
+            <div class="col-md-4">
+                <img src="/uploads/images/friendimage.png" class="img-fluid rounded shadow-sm" alt="Friend Management">
+                <p class="mt-2 text-muted">Friend Management</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container mt-5">
+        <h3 class="text-center mb-4 text-dark">
+            <i class="bi bi-question-circle-fill me-2"></i> Frequently Asked Questions
+        </h3>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faqOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne">
+                        Is this chat system secure?
+                    </button>
+                </h2>
+                <div id="faqCollapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, user sessions are protected using cookie-based authentication in ASP.NET Core.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faqTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseTwo">
+                        Can I chat with anyone?
+                    </button>
+                </h2>
+                <div id="faqCollapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        You can only chat with users who accept your friend request.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center text-muted mt-5 pt-3 border-top">
+        <p class="mb-0">&copy; 2025 Project Thread. Built with ❤️ using ASP.NET Core MVC + Bootstrap.</p>
+    </div>
+</div>

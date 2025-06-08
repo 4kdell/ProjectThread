@@ -1,0 +1,107 @@
+﻿@model ProjectThread.Models.User
+@{
+    ViewData["Title"] = "Editor";
+}
+
+<h1>Users</h1>
+
+<p>
+    <a href="/Users/Index">Back to UsersList</a>
+</p>
+
+<form asp-action="Editor" asp-controller="Users" method="post">
+    <input asp-for="UserID" type="hidden" />
+        <input asp-for="UserGUID" type="hidden" />
+        <div class="row mb-3">
+            <label asp-for="Name" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9">
+                <input asp-for="Name" class="form-control" required />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label asp-for="Gender" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9">
+                <select asp-for="Gender" class="form-control">
+                    <option value="">-- Select Gender --</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <label asp-for="Dob" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9">
+                <input asp-for="Dob" type="date" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label asp-for="Email" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9">
+                <input asp-for="Email" class="form-control" required />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label asp-for="Password" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9">
+                <input asp-for="Password" class="form-control" required />
+            </div>
+        </div>
+
+
+
+        <div class="row mb-3">
+            <label asp-for="Phone" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9">
+                <input asp-for="Phone" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label asp-for="Address1" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9">
+                <textarea asp-for="Address1" rows="3" class="form-control"></textarea>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label asp-for="City" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9">
+                <input asp-for="City" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label asp-for="Country" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9">
+                <select asp-for="Country" class="form-control">
+                    <option value="">-- Select Country --</option>
+                    <option value="India">India</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label asp-for="State" class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9">
+                <select asp-for="State" class="form-control">
+                    <option value="">-- Select Country --</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="offset-sm-3 col-sm-9">
+                <button type="submit" class="btn btn-primary w-100">Submit</button>
+            </div>
+        </div>
+
+
+    </form>

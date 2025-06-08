@@ -1,0 +1,68 @@
+﻿@model ProjectThread.Models.Note
+
+@{
+    ViewData["Title"] = "Notes";
+    var allNotes = ViewBag.Notes;
+}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">📝 Notes</h1>
+
+    <form asp-action="NoteEditor" asp-controller="Users" method="post" class="mb-5">
+        <input asp-for="NoteId" type="hidden" />
+        <input asp-for="NoteGUID" type="hidden" />
+
+        <div class="mb-3">
+            <input asp-for="Heading" class="form-control form-control-lg" placeholder="Enter Note Title" required />
+        </div>
+        <div class="mb-3">
+            <textarea asp-for="Body" class="form-control" rows="3" placeholder="Write your note..."></textarea>
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">Save Note</button>
+        </div>
+    </form>
+
+    <hr />
+    <div id="PreviousNotes">
+        <div class="row">
+            @if (allNotes != null)
+            {
+                foreach (var note in allNotes)
+                {
+                    if (!string.IsNullOrWhiteSpace(note.Heading) || !string.IsNullOrWhiteSpace(note.Body))
+                    {
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">@note.Heading</h5>
+                                    <p class="card-text">@note.Body</p>
+
+                                    @* Only show Edit if the content is present *@
+                                    <a asp-controller="Users" asp-action="Notes" asp-route-id="@note.NoteGUID" class="btn EditNotes btn-sm btn-outline-secondary">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <p></p>
+            }
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // When any Edit button inside #PreviousNotes is clicked, hide #PreviousNotes div
+            $('#PreviousNotes').on('click', '.EditNotes', function () {
+                $('#PreviousNotes').hide();
+            });
+        });
+    </script>
+}

@@ -1,0 +1,95 @@
+﻿@model IEnumerable<ProjectThread.Models.User>
+
+@{
+    ViewData["Title"] = "Users List";
+}
+
+<h1>Users</h1>
+
+<p>
+    <a href="/Users/Editor">Create New User</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Gender</th>
+            <th>City</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.Email</td>
+                <td>@user.Phone</td>
+                <td>@user.Gender</td>
+                <td>@user.City</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" asp-controller="Users" asp-action="Profile" asp-route-id="@user.UserGUID">View</a>
+
+                    <div class="dropdown d-inline">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" asp-controller="Users" asp-action="Editor" asp-route-id="@user.UserGUID">Edit</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-danger delete-user" href="javascript:void(0);" data-id="@user.UserGUID">Delete</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section Scripts {
+<script>
+    $(document).ready(function () {
+        $('.delete-user').on('click', function () {
+            var userId = $(this).data('id');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you really want to delete this user?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Users/Delete',
+                        type: 'POST',
+                        data: { id: userId },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', 'User has been deleted.', 'success')
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error!', response.message || 'Failed to delete user.', 'error');
+                            }
+                        },
+                        error: function () {
+                            Swal.fire('Error!', 'Server error occurred.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+}
