@@ -2,10 +2,23 @@
     ViewData["Title"] = "Friends";
     var otherUsers = ViewData["OtherUsers"] as List<ProjectThread.Models.User>;
     var friends = ViewData["Friends"] as List<ProjectThread.Models.Friend>;
+    var request = ViewData["friendReqList"] as List<ProjectThread.Models.FriendRequest>;
 }
 
 <div class="container mt-5">
     <div class="row text-center">
+
+        <div class="col-md-3 mb-4">
+            <a href="/Users/Notes" class="text-decoration-none text-dark">
+                <div class="card shadow-sm rounded-3 h-100 hover-shadow">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-journal-text"></i> Notes</h5>
+                        <p class="card-text">View and manage your notes.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
         <div class="col-md-3 mb-4">
             <a href="/Users/Profile" class="text-decoration-none text-dark">
                 <div class="card shadow-sm rounded-3 h-100 hover-shadow">
@@ -28,23 +41,14 @@
             </a>
         </div>
 
-        <div class="col-md-3 mb-4">
-            <a href="/Users/Notes" class="text-decoration-none text-dark">
-                <div class="card shadow-sm rounded-3 h-100 hover-shadow">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-journal-text"></i> Notes</h5>
-                        <p class="card-text">View and manage your notes.</p>
-                    </div>
-                </div>
-            </a>
-        </div>
+
 
         <div class="col-md-3 mb-4">
             <a href="/Users/Friends" class="text-decoration-none text-dark">
                 <div class="card shadow-sm rounded-3 h-100 hover-shadow">
                     <div class="card-body">
                         <h5 class="card-title"><i class="bi bi-bell-fill"></i> Notifications</h5>
-                        <p class="card-text">Check latest updates.</p>
+                        <p class="card-text mb-3">Check New Friend Request(s) Below</p>
                     </div>
                 </div>
             </a>
@@ -63,15 +67,16 @@
                 <div class="card-body">
                     @if (friends != null && friends.Any())
                     {
-                        <table class="table table-sm table-bordered table-hover">
-                            <thead class="table-light">
-                            </thead>
+                        <table style="height:200px" class="table table-sm table-bordered table-hover text-center">
                             <tbody>
                                 @foreach (var friend in friends)
                                 {
                                     <tr>
                                         <td>
                                             <a class="text-decoration-none" href="/Users/OpenChat/@friend.FriendUserID">@friend.FriendName</a>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-primary" href="/Users/OpenChat/@friend.FriendUserID">Open Chat</a>
                                         </td>
                                     </tr>
                                 }
@@ -87,37 +92,56 @@
         </div>
 
         <!-- Middle Info Box -->
-        <div class="col-xl-5">
-            <div class="card shadow-sm rounded-3 h-100 d-flex flex-column justify-content-center">
-                <div class="card-body text-center">
-                    <i class="bi bi-chat-dots-fill display-4 text-primary mb-3"></i>
-                    <h4 class="text-primary">Start Chatting</h4>
-                    <p class="text-muted">Select a friend from your list to begin a conversation.</p>
-                    <blockquote class="blockquote mb-0">
-                        <p class="mb-3">"Good friends are like stars. You don't always see them, but you know they're always there."</p>
-                        <footer class="blockquote-footer">Anonymous</footer>
-                    </blockquote>
+        <div class="col-xl-4">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-stars"></i>Friend Request</h5>
+                </div>
+                <div class="card-body">
+                    @if (request != null && request.Any())
+                    {
+                        <table style="height:200px" class="table table-sm table-bordered table-hover text-center">
+                            <tbody>
+                                @foreach (var req in request)
+                                {
+                                    <tr>
+                                        <td class="text-success">@req.FriendName</td>
+                                        <td>
+                                            @* <a id="" class="btn btn-sm btn-outline-success " asp-controller="Users" asp-action="SendRequest" asp-route-id="@req.FriendUserID">+ Accept Req</a> *@
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-success accept-request" data-id="@req.FriendUserID">+ Accept Req</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No request at the moment.</p>
+                    }
                 </div>
             </div>
         </div>
 
         <!-- Friend Recommendations -->
-        <div class="col-xl-3">
+        <div class="col-xl-4">
             <div class="card shadow-sm rounded-3 h-100">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0"><i class="bi bi-stars"></i> Recommended Users</h5>
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="bi bi-stars"></i> Recommended Friends</h5>
                 </div>
                 <div class="card-body">
                     @if (otherUsers != null && otherUsers.Any())
                     {
-                        <table class="table table-sm table-bordered table-hover text-center">
+                        <table style="height:200px" class="table table-sm table-bordered table-hover text-center">
                             <tbody>
                                 @foreach (var user in otherUsers)
                                 {
                                     <tr>
-                                        <td>@user.Name</td>
+                                        <td class="text-danger">@user.Name</td>
                                         <td>
-                                            <a class="btn btn-sm btn-outline-success" asp-controller="Users" asp-action="AddToFriend" asp-route-id="@user.UserID">+ Add</a>
+                                            @* <a id="" class=" SendRequest btn btn-sm btn-outline-danger" asp-controller="Users" asp-action="SendRequest" asp-route-id="@user.UserID">+ Send Req</a> *@
+                                            <a href="javascript:void(0);" class="SendRequest btn btn-sm btn-outline-danger" data-id="@user.UserID">+ Send Req</a>
+
                                         </td>
                                     </tr>
                                 }
@@ -134,72 +158,118 @@
     </div>
 </div>
 
-<div class="container mt-5">
-    <div class="card shadow-sm rounded-3">
-        <div class="card-body text-center">
-            <h5 class="text-secondary"><i class="bi bi-lightbulb-fill"></i> Tip of the Day</h5>
-            <p class="text-muted">"Connecting with people builds your network. Start by saying hello!"</p>
-        </div>
-    </div>
-</div>
- @* Did You Know? *@ 
-<div class="container mt-4">
-    <div class="card shadow-sm rounded-3 hover-shadow">
-        <div class="card-body">
-            <h5 class="text-success"><i class="bi bi-info-circle-fill"></i> Did You Know?</h5>
-            <p class="text-muted mt-2 mb-0">
-                You can send real-time messages to your friends without refreshing the page. Explore our chat features to make the most out of your conversations!
-            </p>
-        </div>
-    </div>
-</div>
-
-@* Featured Users *@
-<div class="container mt-4">
-    <div class="card shadow-sm rounded-3 hover-shadow">
-        <div class="card-body">
-            <h5 class="text-info"><i class="bi bi-images"></i> Featured Users</h5>
-            <div class="d-flex flex-wrap justify-content-start mt-3">
-                @for (int i = 0; i < 6; i++)
-                {
-                    <div class="me-3 mb-3 text-center">
-                        <img src="https://via.placeholder.com/60" class="rounded-circle shadow-sm hover-shadow-sm" alt="User" />
-                        <div class="small mt-1">User @i</div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
 
 
 
 
 
-
-
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        init();
-
+        // FriendName click handler
         $(".FriendName").click(function () {
+           
             var friendId = $(this).data("id");
+
             $.ajax({
                 url: '/Users/OpenChat',
                 type: 'GET',
                 data: { id: friendId },
-                success: function (html) {
-                    // $("#chatContainer").html(html);
+                success: function () {
+                    console.log("Success");
                 },
                 error: function () {
                     alert("Failed to load chat threads.");
                 }
             });
         });
+
+        // SendRequest click handler
+        $(".SendRequest").on("click", function () {
+            var button = $(this);
+            var friendId = button.data("id");
+
+            $.ajax({
+                url: '/Users/SendRequest',
+                type: 'POST',
+                data: { id: friendId },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Request Sent',
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/Users/Friends';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Already Sent',
+                            text: response.message,
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong while sending the request.'
+                    });
+                }
+            });
+        });
+
+
+        // Accept-request click handler
+        $(".accept-request").on("click", function () {
+            var button = $(this);
+            var friendId = button.data("id");
+
+            $.ajax({
+                url: "/Users/AddToFriend",
+                type: "POST",
+                data: { id: friendId },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Friend Added!",
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
+                        button.text("Request Accepted")
+                            .prop("disabled", true)
+                            .removeClass("btn-outline-success")
+                            .addClass("btn-success");
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Failed",
+                            text: response.message || "Something went wrong!"
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Server Error",
+                        text: "Could not process the request."
+                    });
+                }
+            });
+        });
+
     });
 </script>
+
 
 <!-- Bootstrap Icons CDN -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">

@@ -53,6 +53,17 @@ namespace ProjectThread.Models
         public int IsDeleted { get; set; } = 0;
         public DateTime CreatedOn { get; set; } = DateTime.Now;
     }
+     public class FriendRequest
+    {
+        [Key]
+        public int RequestID { get; set; }
+        public int UserID { get; set; }
+        public int FriendUserID { get; set; }
+        public string? FriendName { get; set; }
+        public int IsConfirm { get; set; } = 0;
+        public int IsDeclined { get; set; } = 0;
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
+    }
 
     public class Thread
     {

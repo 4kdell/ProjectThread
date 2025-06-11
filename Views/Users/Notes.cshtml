@@ -6,8 +6,8 @@
 }
 
 <div class="container mt-5">
-    <h1 class="text-center mb-4">📝 Notes</h1>
 
+    <h1 class="text-center mb-4">📝 Notes</h1>
     <form asp-action="NoteEditor" asp-controller="Users" method="post" class="mb-5">
         <input asp-for="NoteId" type="hidden" />
         <input asp-for="NoteGUID" type="hidden" />
@@ -35,11 +35,31 @@
                         <div class="col-md-6 col-lg-4 mb-4">
                             <div class="card shadow-sm">
                                 <div class="card-body">
-                                    <h5 class="card-title">@note.Heading</h5>
-                                    <p class="card-text">@note.Body</p>
+                                    <div class="card-header mb-3 d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title">@note.Heading</h5>
+                                        <div class="dropdown">
+                                            <button class="btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                More
+                                            </button>
 
-                                    @* Only show Edit if the content is present *@
-                                    <a asp-controller="Users" asp-action="Notes" asp-route-id="@note.NoteGUID" class="btn EditNotes btn-sm btn-outline-secondary">Edit</a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    @* <a  href="#" onclick="confirmDelete('@Url.Action("DeleteFriend", "Users", new { id = _friendID })')">Delete Friend</a> *@
+                                                    <a asp-controller="Users" asp-action="Notes" asp-route-id="@note.NoteGUID" class="dropdown-item text-primary">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a onclick="confirmDelete('@Url.Action("DeleteNotes", "Users", new { id = note.NoteGUID })')" class="dropdown-item text-danger">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+
+                                   
+                                    
+                                    <p class="card-text">@note.Body</p>
+                                    
+                                    
                                 </div>
                             </div>
                         </div>
@@ -55,8 +75,10 @@
 
 </div>
 
+
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function () {
             // When any Edit button inside #PreviousNotes is clicked, hide #PreviousNotes div
@@ -64,5 +86,53 @@
                 $('#PreviousNotes').hide();
             });
         });
+        function confirmDelete(deleteUrl) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to delete this friend?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: response.message,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    // Optionally reload the page or update UI
+                                    window.location.href = '/Users/Notes';
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: response.message
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Something went wrong while deleting.'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+
+
     </script>
 }

@@ -11,7 +11,7 @@ namespace ProjectThread.Models
         public DbSet<Note> Notes { get; set; }
         public DbSet<Friend> Friends { get; set; }
         public DbSet<Thread> Threads { get; set; }
-
+        public DbSet<FriendRequest> FriendRequests { get; set; }
 
     }
 }

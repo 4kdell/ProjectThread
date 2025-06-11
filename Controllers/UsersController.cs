@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.VisualBasic;
 using ProjectThread.Migrations;
 using ProjectThread.Models;
 using System.Security.Claims;
@@ -96,9 +97,9 @@ namespace ProjectThread.Controllers
 
         public IActionResult Notes(Guid? id)
         {
-            
+
             int userIdClaim = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value);
-            if(userIdClaim>0)
+            if (userIdClaim > 0)
             {
                 if (id != null)
                 {
@@ -112,7 +113,7 @@ namespace ProjectThread.Controllers
             {
                 return RedirectToAction("Login", "Auth");
             }
-            
+
             return View();
         }
 
@@ -144,15 +145,26 @@ namespace ProjectThread.Controllers
             {
                 var Friends = _context.Friends.Where(a => a.UserID == userIdClaim).ToList();
                 ViewData["Friends"] = Friends;
+
                 var friendIds = Friends.Select(f => f.FriendUserID).Distinct().ToList();
                 var OtherUsers = _context.Users.Where(u => u.UserID != userIdClaim && !friendIds.Contains(u.UserID)).ToList();
                 ViewData["OtherUsers"] = OtherUsers;
+
+                var friendRequests = _context.FriendRequests.Where(f => f.UserID == userIdClaim && f.IsConfirm==0).
+                    GroupBy(r => r.FriendUserID).Select(g => g.First()).ToList();
+                if (friendRequests.Any())
+                {
+                    ViewData["friendReqList"] = friendRequests;
+                }
+
+
+
             }
             else
             {
                 return RedirectToAction("Login", "Auth");
             }
-            
+
             return View();
 
         }
@@ -203,40 +215,71 @@ namespace ProjectThread.Controllers
             thread.ThreadBody = collection["Body"];
             _context.Threads.Add(thread);
             _context.SaveChanges();
-            ViewData["CurrentFriend"]= friendUserId;
+            ViewData["CurrentFriend"] = friendUserId;
             return RedirectToAction("OpenChat", "Users", new { id = friendUserId.Value });
         }
+
+
 
 
 
         public IActionResult AddToFriend(int id)
         {
             int userIdClaim = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value);
-            if (id > 0 && userIdClaim>0)
+            var checkFriend = _context.Friends.Where(a => a.UserID == userIdClaim && a.FriendUserID == id).FirstOrDefault();
+            if (checkFriend == null)
             {
-                string friendName = _context.Users.Where(a => a.UserID == id).Select(b => b.Name).FirstOrDefault();
-                Friend friend = new Friend();
-                friend.FriendUserID = id;
-                friend.UserID = userIdClaim;
-                friend.FriendName = friendName;
+                if (id > 0 && userIdClaim > 0)
+                {
+                    string friendName = _context.Users.Where(a => a.UserID == id).Select(b => b.Name).FirstOrDefault();
+                    Friend friend = new Friend();
+                    friend.FriendUserID = id;
+                    friend.UserID = userIdClaim;
+                    friend.FriendName = friendName;
+                    _context.Friends.Add(friend);
+                    _context.SaveChanges();
 
-                _context.Friends.Add(friend);
-                _context.SaveChanges();
-            }
-            else
-            {
+                    var request = _context.FriendRequests.Where(a => a.UserID == userIdClaim && a.FriendUserID == id).FirstOrDefault();
+                    if (request != null)
+                    {
+                     _context.FriendRequests.Where(a => a.UserID == userIdClaim && a.FriendUserID == id)
+                                .ExecuteUpdate(setters => setters.SetProperty(x => x.IsConfirm, 1));
+
+                    }
+
+                    string msgTrue = "You are now Friend with " + friend.FriendName;
+                    return Json(new { success = true, message = msgTrue });
+                }
                 return RedirectToAction("Login", "Auth");
             }
-
-
-            return RedirectToAction("Friends", "Users");
-
+            string msgFalse = "You are allready friend with user " + checkFriend.FriendName;
+            return Json(new { success = true, message = msgFalse });
+        }
+        public IActionResult SendRequest(int id)
+        {
+            int userIdClaim = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value);
+            var checkReq = _context.FriendRequests.Where(a => a.UserID == userIdClaim && a.FriendUserID == id).FirstOrDefault();
+            if (checkReq == null)
+            {
+                if (id > 0 && userIdClaim > 0)
+                {
+                    var friendName = _context.Users.Where(a => a.UserID == id).Select(b => b.Name).FirstOrDefault();
+                    FriendRequest request = new FriendRequest();
+                    request.FriendUserID = id;
+                    request.FriendName = friendName;
+                    request.UserID = userIdClaim;
+                    _context.FriendRequests.Add(request);
+                    _context.SaveChanges();
+                }
+                return Json(new { success = true, message = "Request Sent" });
+            }
+            return Json(new { success = false, message = " You have allready sent Request to this user." });
         }
 
         public IActionResult DeleteFriend(int id)
         {
             int userIdClaim = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value);
-            if (id > 0 && userIdClaim>0)
+            if (id > 0 && userIdClaim > 0)
             {
                 var friend = _context.Friends.Where(a => a.UserID == userIdClaim && a.FriendUserID == id).FirstOrDefault();
                 if (friend != null)
@@ -246,6 +289,24 @@ namespace ProjectThread.Controllers
                     return Json(new { success = true, message = "Usre Deleted !!" });
                 }
                 return Json(new { success = false, message = "User not found !!" });
+            }
+            return RedirectToAction("Login", "Login");
+
+        }
+
+        public IActionResult DeleteNotes(Guid? id)
+        {
+            int userIdClaim = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value);
+            if (userIdClaim > 0)
+            {
+                var note = _context.Notes.Where(a => a.UserID == userIdClaim && a.NoteGUID == id).FirstOrDefault();
+                if (note != null)
+                {
+                    _context.Notes.Remove(note);
+                    _context.SaveChanges();
+                    return Json(new { success = true, message = "Notes Deleted !!" });
+                }
+                return Json(new { success = false, message = "Note not found !!" });
             }
             return RedirectToAction("Login", "Login");
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectThread.Models;
 
@@ -11,9 +12,11 @@ using ProjectThread.Models;
 namespace ProjectThread.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250608121713_sendReq")]
+    partial class sendReq
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,37 +56,6 @@ namespace ProjectThread.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Friends");
-                });
-
-            modelBuilder.Entity("ProjectThread.Models.FriendRequest", b =>
-                {
-                    b.Property<int>("RequestID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestID"));
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FriendName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FriendUserID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IsConfirm")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IsDeclined")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("RequestID");
-
-                    b.ToTable("FriendRequests");
                 });
 
             modelBuilder.Entity("ProjectThread.Models.Note", b =>
