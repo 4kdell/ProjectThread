@@ -150,23 +150,18 @@ namespace ProjectThread.Controllers
                 var OtherUsers = _context.Users.Where(u => u.UserID != userIdClaim && !friendIds.Contains(u.UserID)).ToList();
                 ViewData["OtherUsers"] = OtherUsers;
 
-                var friendRequests = _context.FriendRequests.Where(f => f.UserID == userIdClaim && f.IsConfirm==0).
+                var friendRequests = _context.FriendRequests.Where(f => f.FriendUserID == userIdClaim && f.IsConfirm==0).
                     GroupBy(r => r.FriendUserID).Select(g => g.First()).ToList();
                 if (friendRequests.Any())
                 {
                     ViewData["friendReqList"] = friendRequests;
                 }
-
-
-
             }
             else
             {
                 return RedirectToAction("Login", "Auth");
             }
-
             return View();
-
         }
 
         public IActionResult OpenChat(int id)
@@ -226,28 +221,38 @@ namespace ProjectThread.Controllers
         public IActionResult AddToFriend(int id)
         {
             int userIdClaim = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value);
+            string userNameClaim = User.Claims.FirstOrDefault(c => c.Type == "UserName")?.Value;
             var checkFriend = _context.Friends.Where(a => a.UserID == userIdClaim && a.FriendUserID == id).FirstOrDefault();
             if (checkFriend == null)
             {
                 if (id > 0 && userIdClaim > 0)
                 {
                     string friendName = _context.Users.Where(a => a.UserID == id).Select(b => b.Name).FirstOrDefault();
-                    Friend friend = new Friend();
-                    friend.FriendUserID = id;
-                    friend.UserID = userIdClaim;
-                    friend.FriendName = friendName;
-                    _context.Friends.Add(friend);
+                    Friend friend1 = new Friend();
+                    friend1.FriendUserID = id;
+                    friend1.UserID = userIdClaim;
+                    friend1.UserName = userNameClaim;
+                    friend1.FriendName = friendName;
+                    _context.Friends.Add(friend1);
                     _context.SaveChanges();
 
-                    var request = _context.FriendRequests.Where(a => a.UserID == userIdClaim && a.FriendUserID == id).FirstOrDefault();
+                    Friend friend2 = new Friend();
+                    friend2.FriendUserID = userIdClaim;
+                    friend2.UserID =id ;
+                    friend2.UserName = friendName ;
+                    friend2.FriendName = userNameClaim;
+                    _context.Friends.Add(friend2);
+                    _context.SaveChanges();
+
+                    var request = _context.FriendRequests.Where(a => a.UserID == id && a.FriendUserID == userIdClaim).FirstOrDefault();
                     if (request != null)
                     {
-                     _context.FriendRequests.Where(a => a.UserID == userIdClaim && a.FriendUserID == id)
+                     _context.FriendRequests.Where(a => a.UserID == id && a.FriendUserID == userIdClaim)
+                                .ExecuteUpdate(setters => setters.SetProperty(x => x.IsConfirm, 1)); 
+                     _context.FriendRequests.Where(a => a.UserID == userIdClaim && a.FriendUserID ==id )
                                 .ExecuteUpdate(setters => setters.SetProperty(x => x.IsConfirm, 1));
-
                     }
-
-                    string msgTrue = "You are now Friend with " + friend.FriendName;
+                    string msgTrue = "You are now Friend with " + friend1.FriendName;
                     return Json(new { success = true, message = msgTrue });
                 }
                 return RedirectToAction("Login", "Auth");
@@ -258,6 +263,7 @@ namespace ProjectThread.Controllers
         public IActionResult SendRequest(int id)
         {
             int userIdClaim = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value);
+            string userNameClaim = User.Claims.FirstOrDefault(c => c.Type == "UserName")?.Value;
             var checkReq = _context.FriendRequests.Where(a => a.UserID == userIdClaim && a.FriendUserID == id).FirstOrDefault();
             if (checkReq == null)
             {
@@ -267,6 +273,7 @@ namespace ProjectThread.Controllers
                     FriendRequest request = new FriendRequest();
                     request.FriendUserID = id;
                     request.FriendName = friendName;
+                    request.UserName = userNameClaim;
                     request.UserID = userIdClaim;
                     _context.FriendRequests.Add(request);
                     _context.SaveChanges();
@@ -281,11 +288,21 @@ namespace ProjectThread.Controllers
             int userIdClaim = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value);
             if (id > 0 && userIdClaim > 0)
             {
-                var friend = _context.Friends.Where(a => a.UserID == userIdClaim && a.FriendUserID == id).FirstOrDefault();
-                if (friend != null)
+                
+                var friends = _context.Friends.Where(a => a.UserID == userIdClaim && a.FriendUserID == id ||
+                a.UserID==id && a.FriendUserID==userIdClaim).ToList();
+                if (friends != null)
                 {
-                    _context.Friends.Remove(friend);
+                    _context.Friends.RemoveRange(friends);
                     _context.SaveChanges();
+                    var requests = _context.FriendRequests.Where(a => a.UserID == userIdClaim || a.UserID == id
+                                          || a.FriendUserID == userIdClaim || a.FriendUserID == id).ToList();
+                    if (requests != null)
+                    {
+                        _context.FriendRequests.RemoveRange(requests);
+                        _context.SaveChanges();
+
+                    }
                     return Json(new { success = true, message = "Usre Deleted !!" });
                 }
                 return Json(new { success = false, message = "User not found !!" });

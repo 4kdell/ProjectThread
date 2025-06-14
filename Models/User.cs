@@ -47,6 +47,7 @@ namespace ProjectThread.Models
         [Key]
         public int FriendID { get; set; }
         public int UserID { get; set; }
+        public string? UserName { get; set; }
         public int FriendUserID { get; set; }
         public string? FriendName { get; set; }
         public int IsBlocked { get; set; } = 0;
@@ -60,6 +61,7 @@ namespace ProjectThread.Models
         public int UserID { get; set; }
         public int FriendUserID { get; set; }
         public string? FriendName { get; set; }
+        public string? UserName { get; set; }
         public int IsConfirm { get; set; } = 0;
         public int IsDeclined { get; set; } = 0;
         public DateTime CreatedOn { get; set; } = DateTime.Now;

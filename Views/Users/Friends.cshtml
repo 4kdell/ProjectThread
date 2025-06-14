@@ -4,6 +4,59 @@
     var friends = ViewData["Friends"] as List<ProjectThread.Models.Friend>;
     var request = ViewData["friendReqList"] as List<ProjectThread.Models.FriendRequest>;
 }
+<style>
+    /* Card hover effect */
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .hover-shadow-sm:hover {
+        box-shadow: 0 0.35rem 0.75rem rgba(0, 0, 0, 0.1);
+        background-color: #f8f9fa;
+        transition: 0.2s ease;
+    }
+
+    /* Table row hover effect */
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Card titles with icons spacing */
+    .card-title i {
+        margin-right: 8px;
+    }
+
+    /* Button styling for consistent look */
+    .btn-outline-success, .btn-outline-danger, .btn-outline-primary {
+        min-width: 110px;
+    }
+
+    /* SweetAlert font fix if needed */
+    .swal2-popup {
+        font-size: 1rem !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Custom container spacing */
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+</style>
+<style>
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .hover-shadow-sm:hover {
+        box-shadow: 0 0.35rem 0.75rem rgba(0, 0, 0, 0.1);
+        background-color: #f8f9fa;
+        transition: 0.2s ease;
+    }
+</style>
+
 
 <div class="container mt-5">
     <div class="row text-center">
@@ -12,7 +65,7 @@
             <a href="/Users/Notes" class="text-decoration-none text-dark">
                 <div class="card shadow-sm rounded-3 h-100 hover-shadow">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-journal-text"></i> Notes</h5>
+                        <h5 class="card-title text-warning"><i class="bi bi-journal-text"></i> Notes</h5>
                         <p class="card-text">View and manage your notes.</p>
                     </div>
                 </div>
@@ -23,7 +76,7 @@
             <a href="/Users/Profile" class="text-decoration-none text-dark">
                 <div class="card shadow-sm rounded-3 h-100 hover-shadow">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-person-circle"></i> My Profile</h5>
+                        <h5 class="card-title text-info"><i class="bi bi-person-circle"></i> My Profile</h5>
                         <p class="card-text">View and edit your profile info.</p>
                     </div>
                 </div>
@@ -34,35 +87,33 @@
             <a href="/Users/Friends" class="text-decoration-none text-dark">
                 <div class="card shadow-sm rounded-3 h-100 hover-shadow">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-people-fill"></i> Friends</h5>
+                        <h5 class="card-title text-success"><i class="bi bi-people-fill"></i> Friends</h5>
                         <p class="card-text">Click on friend name to chat with.</p>
                     </div>
                 </div>
             </a>
         </div>
 
-
-
         <div class="col-md-3 mb-4">
             <a href="/Users/Friends" class="text-decoration-none text-dark">
                 <div class="card shadow-sm rounded-3 h-100 hover-shadow">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-bell-fill"></i> Notifications</h5>
-                        <p class="card-text mb-3">Check New Friend Request(s) Below</p>
+                        <h5 class="card-title text-danger"><i class="bi bi-bell-fill"></i> Notifications</h5>
+                        <p class="card-text mb-3">Check New Friend Reques Below</p>
                     </div>
                 </div>
             </a>
         </div>
     </div>
-</div>
-
+</div> 
+@*  new +++++++++++++++++++++++++++++++++++++++++++++++++++++++*@
 <div class="container mt-4">
     <div class="row g-4">
         <!-- Friends List -->
         <div class="col-xl-4">
             <div class="card shadow-sm rounded-3 h-100">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-person-check-fill"></i> Friend List</h5>
+                    <h5 class="mb-0"><i class="bi bi-people-fill me-2"></i> Friend List</h5>
                 </div>
                 <div class="card-body">
                     @if (friends != null && friends.Any())
@@ -73,10 +124,14 @@
                                 {
                                     <tr>
                                         <td>
-                                            <a class="text-decoration-none" href="/Users/OpenChat/@friend.FriendUserID">@friend.FriendName</a>
+                                            <a class="text-decoration-none" href="/Users/OpenChat/@friend.FriendUserID">
+                                                <i class="bi bi-person-circle text-primary me-1"></i>@friend.FriendName
+                                            </a>
                                         </td>
                                         <td>
-                                            <a class="btn btn-sm btn-outline-primary" href="/Users/OpenChat/@friend.FriendUserID">Open Chat</a>
+                                            <a class="btn btn-sm btn-outline-primary" href="/Users/OpenChat/@friend.FriendUserID">
+                                                <i class="bi bi-chat-left-dots-fill me-1"></i>Open Chat
+                                            </a>
                                         </td>
                                     </tr>
                                 }
@@ -85,7 +140,7 @@
                     }
                     else
                     {
-                        <p class="text-muted">No friends yet. Add some from the right box!</p>
+                        <p class="text-muted"><i class="bi bi-person-x-fill me-1 text-primary"></i>No friends yet. Add some from the right box!</p>
                     }
                 </div>
             </div>
@@ -95,7 +150,7 @@
         <div class="col-xl-4">
             <div class="card shadow-sm rounded-3 h-100">
                 <div class="card-header bg-success text-white">
-                    <h5 class="mb-0"><i class="bi bi-stars"></i>Friend Request</h5>
+                    <h5 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i> Friend Request</h5>
                 </div>
                 <div class="card-body">
                     @if (request != null && request.Any())
@@ -105,10 +160,13 @@
                                 @foreach (var req in request)
                                 {
                                     <tr>
-                                        <td class="text-success">@req.FriendName</td>
+                                        <td class="text-success">
+                                            <i class="bi bi-person-lines-fill me-1 text-success"></i>@req.UserName
+                                        </td>
                                         <td>
-                                            @* <a id="" class="btn btn-sm btn-outline-success " asp-controller="Users" asp-action="SendRequest" asp-route-id="@req.FriendUserID">+ Accept Req</a> *@
-                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-success accept-request" data-id="@req.FriendUserID">+ Accept Req</a>
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-success accept-request" data-id="@req.UserID">
+                                                <i class="bi bi-check-circle-fill me-1"></i>+ Accept Req
+                                            </a>
                                         </td>
                                     </tr>
                                 }
@@ -117,7 +175,7 @@
                     }
                     else
                     {
-                        <p class="text-muted">No request at the moment.</p>
+                        <p class="text-muted"><i class="bi bi-hourglass-split text-danger me-1"></i>No request at the moment.</p>
                     }
                 </div>
             </div>
@@ -127,7 +185,7 @@
         <div class="col-xl-4">
             <div class="card shadow-sm rounded-3 h-100">
                 <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0"><i class="bi bi-stars"></i> Recommended Friends</h5>
+                    <h5 class="mb-0"><i class="bi bi-stars me-2"></i> Recommended Friends</h5>
                 </div>
                 <div class="card-body">
                     @if (otherUsers != null && otherUsers.Any())
@@ -137,11 +195,13 @@
                                 @foreach (var user in otherUsers)
                                 {
                                     <tr>
-                                        <td class="text-danger">@user.Name</td>
+                                        <td class="text-danger">
+                                            <i class="bi bi-person-hearts text-danger me-1"></i>@user.Name
+                                        </td>
                                         <td>
-                                            @* <a id="" class=" SendRequest btn btn-sm btn-outline-danger" asp-controller="Users" asp-action="SendRequest" asp-route-id="@user.UserID">+ Send Req</a> *@
-                                            <a href="javascript:void(0);" class="SendRequest btn btn-sm btn-outline-danger" data-id="@user.UserID">+ Send Req</a>
-
+                                            <a href="javascript:void(0);" class="SendRequest btn btn-sm btn-outline-danger" data-id="@user.UserID">
+                                                <i class="bi bi-person-plus-fill me-1"></i>+ Send Req
+                                            </a>
                                         </td>
                                     </tr>
                                 }
@@ -150,13 +210,36 @@
                     }
                     else
                     {
-                        <p class="text-muted">No users to recommend at the moment.</p>
+                        <p class="text-muted"><i class="bi bi-search text-secondary me-1"></i>No users to recommend at the moment.</p>
                     }
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
+<!-- Instructional Card -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm rounded-3">
+            <div class="card-header bg-dark text-white">
+                <h5><i class="bi bi-exclamation-circle-fill text-warning"></i> Community Guidelines</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li><strong>Be Respectful:</strong> Chat responsibly and avoid abusive language or spam.</li>
+                    <li><strong>Safe Interaction:</strong> Add only known or trusted friends. Don’t share private info.</li>
+                    <li><strong>Chat Feature:</strong> Click on a friend’s name to start chatting instantly.</li>
+                    <li><strong>Friend Management:</strong> You can remove friends from the list anytime if needed.</li>
+                    <li><strong>Help & Support:</strong> Contact support if you face any issues.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -243,12 +326,9 @@
                             text: response.message,
                             timer: 2000,
                             showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/Users/Friends';
                         });
-
-                        button.text("Request Accepted")
-                            .prop("disabled", true)
-                            .removeClass("btn-outline-success")
-                            .addClass("btn-success");
                     } else {
                         Swal.fire({
                             icon: "error",

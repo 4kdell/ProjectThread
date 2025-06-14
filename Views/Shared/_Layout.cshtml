@@ -1,5 +1,9 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+@{
+    var UserName = User.Claims.FirstOrDefault(c => c.Type == "UserName")?.Value;
+    var UserEmail = User.Claims.FirstOrDefault(c => c.Type == "UserEmail")?.Value;
+}
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,8 +83,9 @@
                         <li class="nav-item">
                             <div class="d-inline">
                                 <div class="dropdown">
-                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        MY PROFILE
+                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        @UserEmail</br>
+                                        @UserName
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li><a class="nav-link text-info" asp-area="" asp-controller="Users" asp-action="Profile">Go to Profile</a></li>
